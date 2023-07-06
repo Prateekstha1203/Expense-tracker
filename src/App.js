@@ -37,6 +37,10 @@ function App() {
       <h2 style={{ color: "white" }}> Expense Tracker App </h2>
       <NewExpenses onNewExpense={newExpenseHandler} />
       <Expenses expenses={expenses} />
+      <div className="copyright">
+        copyright © 2023 Prateek Shrestha
+        <span id="date" /> all rights reserved
+      </div>
     </div>
   );
 }
