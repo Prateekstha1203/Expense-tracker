@@ -7,7 +7,7 @@
 }
 p {
   color: white;
-  align-items:start;
+  align-items:flex-start;
   display: flex;
   padding-left: 1rem;
 }

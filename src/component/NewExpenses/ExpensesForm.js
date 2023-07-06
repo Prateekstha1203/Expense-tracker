@@ -1,44 +1,50 @@
 import React, { useState } from "react";
 import "./ExpensesForm.css";
-const ExpensesForm = (props) => {
-  const [newTitle, setnewTitle] = useState("");
-  const [newAmount, setnewAmount] = useState("");
-  const [newDate, setnewDate] = useState("");
 
-  //   const titleChangeHandler = (e) => {
-  //     console.log("title changed!!");
-  //     setnewTitle(e.target.value);
-  //   };
-  //   const amountChangeHandler = (e) => {
-  //     setnewAmount(e.target.value);
-  //   };
-  //   const dateChangeHandler = (e) => {
-  //     setnewDate(e.target.value);
-  //   };
+const ExpensesForm = (props) => {
+  const [newTitle, setNewTitle] = useState("");
+  const [newAmount, setNewAmount] = useState("");
+  const [newDate, setNewDate] = useState("");
+  const [titleValid, setTitleValid] = useState(true);
+  const [amountValid, setAmountValid] = useState(true);
+  const [dateValid, setDateValid] = useState(true);
 
   const inputChangeHandler = (identifier, value) => {
     if (identifier === "title") {
-      setnewTitle(value);
+      setNewTitle(value);
     } else if (identifier === "date") {
-      setnewDate(value);
+      setNewDate(value);
     } else {
-      setnewAmount(value);
+      setNewAmount(value);
     }
   };
 
   const submitHandler = (event) => {
     event.preventDefault();
-    const expenseData = {
-      title: newTitle,
-      amount: newAmount,
-      date: newDate,
-    };
-    props.onSave(expenseData);
 
-    setnewAmount("");
-    setnewTitle("");
-    setnewDate("");
+    // Validate form inputs
+    const isTitleValid = newTitle.trim() !== "";
+    const isAmountValid = newAmount !== "";
+    const isDateValid = newDate !== "";
+
+    setTitleValid(isTitleValid);
+    setAmountValid(isAmountValid);
+    setDateValid(isDateValid);
+
+    if (isTitleValid && isAmountValid && isDateValid) {
+      const expenseData = {
+        title: newTitle,
+        amount: +newAmount,
+        date: new Date(newDate),
+      };
+      props.onSave(expenseData);
+
+      setNewTitle("");
+      setNewAmount("");
+      setNewDate("");
+    }
   };
+  const today = new Date().toISOString().split("T")[0];
   return (
     <form onSubmit={submitHandler}>
       <div className="new-expense__controls">
@@ -51,6 +57,9 @@ const ExpensesForm = (props) => {
               inputChangeHandler("title", event.target.value);
             }}
           />
+          {!titleValid && (
+            <p className="error-message">Please enter a title.</p>
+          )}
         </div>
         <div className="new-expense__control">
           <label>Amount</label>
@@ -63,6 +72,9 @@ const ExpensesForm = (props) => {
               inputChangeHandler("amount", event.target.value);
             }}
           />
+          {!amountValid && (
+            <p className="error-message">Please enter a valid amount.</p>
+          )}
         </div>
         <div className="new-expense__control">
           <label>Date</label>
@@ -70,14 +82,18 @@ const ExpensesForm = (props) => {
             type="date"
             value={newDate}
             min="2019-01-01"
-            max="2023-06-28"
+            max={today}
             onChange={(event) => {
               inputChangeHandler("date", event.target.value);
             }}
           />
+          {!dateValid && <p className="error-message">Please select a date.</p>}
         </div>
       </div>
       <div className="new-expense__actions">
+        <button type="submit" onClick={props.onCancel}>
+          Cancel
+        </button>
         <button type="submit">Add Expense</button>
       </div>
     </form>

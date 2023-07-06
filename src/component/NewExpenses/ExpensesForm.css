@@ -24,3 +24,11 @@
   .new-expense__actions {
     text-align: right;
   }
+
+  .error-message{
+    color: crimson;
+    font-weight: 700;
+    font-size: 0.8rem;
+    padding: none;
+    margin: auto;
+  }
